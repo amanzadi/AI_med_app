@@ -56,6 +56,10 @@ pip install -r requirements.txt
 
 Ensure you have a `db.py` file in your project. This file handles the clinic's database (doctors, patients, appointments) and includes sample data. If you don't have one, create it based on the example provided in previous responses.
 
+```bash
+python db.py
+```
+
 ### 5\. Run the App
 
 ```bash
