@@ -7,7 +7,6 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from agno.tools.sql import SQLTools
 from sqlalchemy import create_engine
-#from agno.models.google import Gemini
 from agno.models.openai import OpenAIChat
 from agno.tools.duckduckgo import DuckDuckGoTools 
 
@@ -17,9 +16,6 @@ db_url = "sqlite:///clinic.db"
 engine = create_engine(db_url)
 
 # Define Custom Tools
-# We will deprecate this tool's internal search and rely on Gemini's search capabilities
-# The Agent's instructions will guide it to use Gemini's search first for doctor discovery.
-# This tool will primarily be used to check if a *found* doctor exists in *our* clinic's database.
 class FindDoctorsInClinicTool:
     def __init__(self, db):
         self.db = db
@@ -197,10 +193,7 @@ class BillingSearchTool:
     name = "search_billing_info"
     description = "Search for billing information on dr-bill.ca website using web search."
     def run(self, query: str):
-        # This tool will use Gemini's search if the model has it enabled
-        # or can be explicitly coded to use requests.get if allowed.
-        # For this setup, we'll assume the agent's `search=True` on Gemini handles it.
-        # If not, you'd integrate a web scraping library or a dedicated search API here.
+        
         try:
             url = f"https://www.dr-bill.ca/?s={query}" # Simple search query param example
             response = requests.get(url)
@@ -221,14 +214,6 @@ class BillingSearchTool:
         except Exception as e:
             return {"error": f"Failed to search billing information: {str(e)}. This might be a temporary issue or the website structure has changed."}
 
-# We will remove ListAllDoctorsTool and ListSpecialtiesTool as primary doctor discovery
-# Instead, the agent will rely on Gemini's search for general doctor information and then
-# use find_doctors_in_clinic for internal clinic verification.
-# If you still want to list *only* doctors in your clinic for specific scenarios,
-# you can keep a modified version of these. For now, let's prioritize external search.
-
-# Removed ListAllDoctorsTool
-# Removed ListSpecialtiesTool
 
 # SQLHelperTool remains useful for internal database schema introspection/queries
 class SQLHelperTool:
@@ -274,7 +259,7 @@ tools = [
     GetAvailabilityTool(db),
     BookAppointmentTool(db),
     HandleEmergencyTool(db),
-    BillingSearchTool(), # This implicitly uses Gemini's search if available to the model or its own internal web scraping
+    BillingSearchTool(),
     SQLHelperTool(db), 
     DuckDuckGoTools()
 ]
@@ -329,14 +314,13 @@ You are DocSplain, an intelligent medical appointment assistant. Follow these gu
     * **Always ensure your response is helpful and never includes "None" or "No information found" without suggesting next steps.** If you can't find a doctor in your clinic, offer to use general search; if you can't book an appointment, explain why and offer alternatives.
 
 10. **Billing Information**:
-    * For billing inquiries, use `search_billing_info` or `DuckDuckGoTools()`.
+    * For billing inquiries, use `search_billing_info` or `DuckDuckGoTools()` to search https://www.dr-bill.ca for answers.
     * Specify that we primarily support AHCIP, MSP, and OHIP billing codes.
 
 """
 
 # Create Agno Agent
 agent = Agent(
-    #model=Gemini(id="gemini-2.0-flash", search=True),
     model=OpenAIChat(id="gpt-4.1-mini"),
     tools=tools,
     instructions=instructions,
