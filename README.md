@@ -38,8 +38,10 @@ It's best to use a virtual environment:
 
 ```bash
 python -m venv venv
+
 # Windows:
 .\venv\Scripts\activate
+
 # macOS/Linux:
 source venv/bin/activate
 
