@@ -1,7 +1,3 @@
-Alright, here's a concise `README.md` for your DocSplain app, focusing on getting it up and running with `streamlit run`.
-
------
-
 # DocSplain: Your AI Medical Appointment Assistant
 
 DocSplain is an intelligent medical appointment assistant built with Streamlit and Agno. It helps patients find and book appointments within a simulated clinic, leveraging AI for smart interactions and web search for broader doctor discovery.
