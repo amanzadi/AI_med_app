@@ -28,8 +28,8 @@ Follow these quick steps to get DocSplain running:
 ### 2\. Get the Code
 
 ```bash
-git clone <repository_url> # Replace with your actual URL
-cd <repository_name>
+git clone https://github.com/amanzadi/AI_med_app.git # Replace with your actual URL
+cd AI_med_app
 ```
 
 ### 3\. Install Dependencies
