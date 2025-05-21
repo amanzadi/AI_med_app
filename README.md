@@ -44,8 +44,6 @@ python -m venv venv
 source venv/bin/activate
 
 pip install -r requirements.txt
-# If you don't have requirements.txt, install manually:
-# pip install streamlit agno-ai sqlalchemy beautifulsoup4 requests pandas openai duckduckgo-search
 ```
 
 ### 4\. Database (`db.py`)
